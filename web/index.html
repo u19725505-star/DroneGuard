@@ -97,8 +97,8 @@ function analyzeTrace(){
  if(missing)findings.push(["Incomplete telemetry fields",missing+" of "+valid.length+" samples lack altitude or groundspeed; conclusions are limited.",false]);
  const speeds=valid.map(s=>s.speed).filter(v=>v!==null),alts=valid.map(s=>s.alt).filter(v=>v!==null),bats=valid.map(s=>s.battery).filter(v=>v!==null);
  if(speeds.length>=2){const jumps=speeds.filter((v,i)=>i>0&&Math.abs(v-speeds[i-1])>8).length;if(jumps)findings.push(["Groundspeed discontinuity",jumps+" adjacent speed changes exceed 8 m/s; inspect timestamps and simulator logs.",false]);else findings.push(["Groundspeed continuity","No adjacent groundspeed change exceeded the 8 m/s screening threshold.",true]);}
- if(bats.length&&Math.min(...bats)<20)findings.push(["Low battery reading","Recorded battery minimum is "+Math.min(...bats).toFixed(1)+"%; verify the simulated battery state and failsafe configuration.",false]);
- if(alts.length&&Math.min(...alts)<-0.5)findings.push(["Altitude below reference","Minimum recorded altitude is "+Math.min(...alts).toFixed(2)+" m; confirm the trace's altitude reference and origin.",false]);
+ if(bats.length&&Math.min(...bats)<20)findings.push(["Low battery reading","Synthetic test battery minimum is "+Math.min(...bats).toFixed(1)+"%; verify the simulated battery state and failsafe configuration.",false]);
+ if(alts.length&&Math.min(...alts)<-0.5)findings.push(["Altitude below reference","Synthetic test minimum altitude is "+Math.min(...alts).toFixed(2)+" m; confirm the trace's altitude reference and origin.",false]);
  const gaps=[];for(let i=1;i<valid.length;i++){const a=Date.parse(valid[i-1].timestamp),b=Date.parse(valid[i].timestamp);if(Number.isFinite(a)&&Number.isFinite(b)&&(b-a)>3000)gaps.push((b-a)/1000);}
  if(gaps.length)findings.push(["Timestamp gap",gaps.length+" interval(s) exceed 3 seconds; this may indicate sampling gaps, not vehicle failure.",false]);
  if(!findings.length)findings.push(["No configured threshold crossed","No issue was detected by the basic screening rules. This is not a safety certification.",true]);
@@ -117,7 +117,7 @@ function runKnownAnomalyTest(){
   {timestamp:new Date(t+2000).toISOString(),altitude:-1.2,groundspeed:12,battery:15,heading:10},
   {timestamp:new Date(t+7000).toISOString(),altitude:1,groundspeed:1,battery:14,heading:12}
  ];
- traceMeta={source:"DroneGuard built-in synthetic known-anomaly test",provenance:"Generated in browser; not a PX4 flight"};
+ traceMeta={source:"DroneGuard built-in synthetic known-anomaly test",provenance:"Generated in browser; not a PX4 flight",mode:"synthetic-test"};
  traceIndex=0;traceLoaded=true;step=0;series.length=0;
  $("gpsmarker").classList.add("trace-mode");$("routepath").parentElement.classList.add("trace-mode");
  $("start").disabled=false;$("start").textContent="STEP 1 · REPLAY WALKTHROUGH";$("systemmode").textContent="● SYNTHETIC TEST MODE";$("datasourceLabel").textContent="SYNTHETIC TEST DATA";$("telemetrytag").textContent="SYNTHETIC";$("mapstatus").textContent="SYNTHETIC TEST REPLAY";$("stoptrace").disabled=true;$("diagnose").disabled=false;
@@ -125,6 +125,8 @@ function runKnownAnomalyTest(){
  $("flightnote").textContent="Synthetic test values — generated locally to validate configured screening rules.";
  log("[TEST] Built-in synthetic trace loaded. This is a test fixture, not PX4 evidence.","warn");
  showTraceSample(normaliseSample(traceSamples[0]),0,traceSamples.length);analyzeTrace();
+ $("issuecount").textContent="SYNTHETIC TEST • "+lastTraceFindings.filter(f=>!f.passed).length+" FLAGGED CONDITIONS";
+ $("tracestatus").textContent="STEP 2 COMPLETE • SYNTHETIC TEST ONLY • 4 injected conditions checked. These are generated examples, not recorded PX4 telemetry.";
  const names=lastTraceFindings.map(f=>f.title);
  const expected=["Groundspeed discontinuity","Low battery reading","Altitude below reference","Timestamp gap"];
  const missing=expected.filter(n=>!names.includes(n));
