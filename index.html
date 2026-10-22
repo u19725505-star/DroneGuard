@@ -35,6 +35,9 @@ body.hud-low-motion *,body.hud-low-motion *:before{animation:none!important;tran
 @media(max-width:700px){.dock-controls{grid-template-columns:repeat(2,minmax(0,1fr))}.hud-dock{position:relative;bottom:auto}}
 @media(prefers-reduced-motion:reduce){body:before{animation:none}}
 
+
+/* Collapsible calibration menu: settings remain active when the panel is hidden. */
+.hud-dock{transition:opacity .22s ease,transform .22s ease,max-height .22s ease}.hud-dock.dock-hidden{opacity:0;transform:translateY(18px);pointer-events:none;visibility:hidden;max-height:0;overflow:hidden;margin:0;padding-top:0;padding-bottom:0;border-width:0}.dock-dismiss{border:1px solid #397786;background:#0a2633;color:var(--cyan);border-radius:5px;padding:7px 10px;font-size:10px;letter-spacing:.08em}.dock-dismiss:hover,.dock-launcher:hover{background:#103847;box-shadow:0 0 18px #64f0f133}.dock-launcher{position:fixed;right:16px;bottom:16px;z-index:1000;display:none;border:1px solid #397786;border-radius:999px;padding:11px 15px;background:rgba(5,22,32,.88);backdrop-filter:blur(16px);color:var(--cyan);box-shadow:0 0 22px #64f0f122;font:11px/1.2 ui-monospace,monospace;letter-spacing:.08em}.dock-launcher.visible{display:block}.dock-actions{align-items:center}.dock-head{gap:12px}@media(max-width:600px){.dock-launcher{right:10px;bottom:10px}.dock-dismiss{padding:8px 9px}}
 </style></head>
 <body>
 <header class="top"><div><div class="brand">DRONE<b>GUARD</b> / JARVIS</div><div class="sub">SIMULATION INTELLIGENCE • AUTONOMOUS SYSTEMS TROUBLESHOOTING</div></div><div class="pill" id="systemmode">● SAFE SIMULATION MODE</div></header>
@@ -156,8 +159,8 @@ $("loadtrace").addEventListener("click",loadTrace);$("stoptrace").addEventListen
 window.runDroneDiagnostics=()=> $("diagnose").click();
 document.addEventListener("DOMContentLoaded",()=>{const b=$("start");if(b){b.disabled=false;b.style.pointerEvents="auto";}});
 </script>
-<section class="hud-dock" aria-label="JARVIS interface controls">
- <div class="dock-head"><div><div class="dock-title">J.A.R.V.I.S. // DISPLAY CALIBRATION</div><div class="sub">Interactive UI controls • presentation only • no effect on vehicle or recorded data</div></div><span class="dock-state" id="dockState">HUD LINK STABLE</span></div>
+<section class="hud-dock" id="displayCalibration" aria-label="JARVIS interface controls">
+ <div class="dock-head"><div><div class="dock-title">J.A.R.V.I.S. // DISPLAY CALIBRATION</div><div class="sub">Interactive UI controls • presentation only • no effect on vehicle or recorded data</div></div><div class="dock-head-actions"><span class="dock-state" id="dockState">HUD LINK STABLE</span><button class="dock-dismiss" id="hideHud" type="button" aria-label="Apply display settings and hide calibration menu">APPLY &amp; HIDE ×</button></div></div>
  <div class="dock-controls">
   <label class="knob-control"><span class="knob-top"><span>GLASS TRANSPARENCY</span><output id="glassOut">48%</output></span><input id="glassKnob" type="range" min="20" max="78" value="48" aria-label="Glass transparency"></label>
   <label class="knob-control"><span class="knob-top"><span>HUD GLOW</span><output id="glowOut">72%</output></span><input id="glowKnob" type="range" min="0" max="100" value="72" aria-label="HUD glow intensity"></label>
@@ -166,6 +169,7 @@ document.addEventListener("DOMContentLoaded",()=>{const b=$("start");if(b){b.dis
  </div>
  <div class="dock-actions"><button class="dock-btn" id="scanToggle" aria-pressed="true">SCANLINES ON</button><button class="dock-btn" id="motionToggle" aria-pressed="false">MOTION ON</button><button class="dock-btn" id="resetHud">RESET DISPLAY</button><span class="hud-corner">READ-ONLY // SIMULATION CONSOLE</span></div>
 </section>
+<button class="dock-launcher" id="showHud" type="button" aria-controls="displayCalibration" aria-expanded="false">⌁ J.A.R.V.I.S. DISPLAY SETTINGS</button>
 <script>
 (()=>{
  const root=document.documentElement,body=document.body;
@@ -184,6 +188,9 @@ document.addEventListener("DOMContentLoaded",()=>{const b=$("start");if(b){b.dis
  }
  [glass,glow,scan,scale].forEach(el=>el.addEventListener('input',apply));
  const scanToggle=document.getElementById('scanToggle'),motionToggle=document.getElementById('motionToggle');
+ const dock=document.getElementById('displayCalibration'),hideHud=document.getElementById('hideHud'),showHud=document.getElementById('showHud');
+ hideHud.addEventListener('click',()=>{dock.classList.add('dock-hidden');showHud.classList.add('visible');showHud.setAttribute('aria-expanded','false');showHud.focus();});
+ showHud.addEventListener('click',()=>{dock.classList.remove('dock-hidden');showHud.classList.remove('visible');showHud.setAttribute('aria-expanded','true');hideHud.focus();});
  scanToggle.addEventListener('click',()=>{const on=scanToggle.getAttribute('aria-pressed')!=='true';scanToggle.setAttribute('aria-pressed',String(on));scanToggle.textContent='SCANLINES '+(on?'ON':'OFF');body.classList.toggle('hud-no-scan',!on);});
  motionToggle.addEventListener('click',()=>{const on=motionToggle.getAttribute('aria-pressed')!=='true';motionToggle.setAttribute('aria-pressed',String(on));motionToggle.textContent='MOTION '+(on?'ON':'REDUCED');body.classList.toggle('hud-low-motion',!on);});
  document.getElementById('resetHud').addEventListener('click',()=>{glass.value=48;glow.value=72;scan.value=7;scale.value=100;apply();scanToggle.setAttribute('aria-pressed','true');scanToggle.textContent='SCANLINES ON';body.classList.remove('hud-no-scan','hud-low-motion');motionToggle.setAttribute('aria-pressed','false');motionToggle.textContent='MOTION ON';document.getElementById('dockState').textContent='DISPLAY DEFAULTS RESTORED';});
