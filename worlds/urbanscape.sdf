@@ -1,0 +1,42 @@
+<?xml version="1.0" ?>
+<sdf version="1.8">
+  <world name="droneguard_urbanscape">
+    <physics name="1ms" type="ignored">
+      <max_step_size>0.004</max_step_size>
+      <real_time_factor>1.0</real_time_factor>
+    </physics>
+    <plugin filename="gz-sim-physics-system" name="gz::sim::systems::Physics"/>
+    <plugin filename="gz-sim-user-commands-system" name="gz::sim::systems::UserCommands"/>
+    <plugin filename="gz-sim-scene-broadcaster-system" name="gz::sim::systems::SceneBroadcaster"/>
+    <plugin filename="gz-sim-sensors-system" name="gz::sim::systems::Sensors"><render_engine>ogre2</render_engine></plugin>
+    <light name="sun" type="directional">
+      <cast_shadows>true</cast_shadows><pose>0 0 80 0 0 0</pose>
+      <diffuse>0.85 0.87 0.92 1</diffuse><specular>0.2 0.2 0.2 1</specular>
+      <direction>-0.35 0.2 -0.92</direction>
+    </light>
+    <model name="ground" static="true">
+      <link name="ground_link">
+        <collision name="ground_collision"><geometry><plane><normal>0 0 1</normal><size>500 500</size></plane></geometry></collision>
+        <visual name="ground_visual"><geometry><plane><normal>0 0 1</normal><size>500 500</size></plane></geometry><material><ambient>0.16 0.19 0.22 1</ambient><diffuse>0.20 0.23 0.26 1</diffuse></material></visual>
+      </link>
+    </model>
+    <!-- Road corridors: broad dark asphalt strips with pale lane markings. -->
+    <model name="east_west_road" static="true"><pose>0 0 0.015 0 0 0</pose><link name="road">
+      <visual name="surface"><geometry><box><size>150 12 0.03</size></box></geometry><material><ambient>0.07 0.08 0.09 1</ambient><diffuse>0.08 0.09 0.10 1</diffuse></material></visual>
+      <visual name="center_line"><pose>0 0 0.018 0 0 0</pose><geometry><box><size>150 0.12 0.012</size></box></geometry><material><emissive>0.7 0.65 0.42 1</emissive></material></visual>
+    </link></model>
+    <model name="north_south_road" static="true"><pose>0 0 0.02 0 0 1.5708</pose><link name="road">
+      <visual name="surface"><geometry><box><size>150 12 0.03</size></box></geometry><material><ambient>0.07 0.08 0.09 1</ambient><diffuse>0.08 0.09 0.10 1</diffuse></material></visual>
+    </link></model>
+    <!-- Low-rise and tower blocks arranged around the intersection. -->
+    <model name="tower_a" static="true"><pose>-22 -22 10 0 0 0</pose><link name="body"><collision name="c"><geometry><box><size>14 14 20</size></box></geometry></collision><visual name="v"><geometry><box><size>14 14 20</size></box></geometry><material><ambient>0.20 0.29 0.37 1</ambient><diffuse>0.24 0.36 0.46 1</diffuse></material></visual></link></model>
+    <model name="tower_b" static="true"><pose>22 -22 15 0 0 0</pose><link name="body"><collision name="c"><geometry><box><size>12 16 30</size></box></geometry></collision><visual name="v"><geometry><box><size>12 16 30</size></box></geometry><material><ambient>0.26 0.30 0.35 1</ambient><diffuse>0.31 0.36 0.42 1</diffuse></material></visual></link></model>
+    <model name="tower_c" static="true"><pose>-22 22 12 0 0 0</pose><link name="body"><collision name="c"><geometry><box><size>16 12 24</size></box></geometry></collision><visual name="v"><geometry><box><size>16 12 24</size></box></geometry><material><ambient>0.34 0.25 0.20 1</ambient><diffuse>0.44 0.31 0.24 1</diffuse></material></visual></link></model>
+    <model name="tower_d" static="true"><pose>22 22 8 0 0 0</pose><link name="body"><collision name="c"><geometry><box><size>14 14 16</size></box></geometry></collision><visual name="v"><geometry><box><size>14 14 16</size></box></geometry><material><ambient>0.22 0.34 0.29 1</ambient><diffuse>0.27 0.43 0.35 1</diffuse></material></visual></link></model>
+    <model name="block_e" static="true"><pose>-43 -18 5 0 0 0</pose><link name="body"><collision name="c"><geometry><box><size>14 18 10</size></box></geometry></collision><visual name="v"><geometry><box><size>14 18 10</size></box></geometry><material><diffuse>0.36 0.39 0.41 1</diffuse></material></visual></link></model>
+    <model name="block_f" static="true"><pose>43 -18 6 0 0 0</pose><link name="body"><collision name="c"><geometry><box><size>16 18 12</size></box></geometry></collision><visual name="v"><geometry><box><size>16 18 12</size></box></geometry><material><diffuse>0.42 0.36 0.29 1</diffuse></material></visual></link></model>
+    <model name="block_g" static="true"><pose>-43 20 4 0 0 0</pose><link name="body"><collision name="c"><geometry><box><size>16 18 8</size></box></geometry></collision><visual name="v"><geometry><box><size>16 18 8</size></box></geometry><material><diffuse>0.30 0.35 0.40 1</diffuse></material></visual></link></model>
+    <model name="block_h" static="true"><pose>43 20 7 0 0 0</pose><link name="body"><collision name="c"><geometry><box><size>16 18 14</size></box></geometry></collision><visual name="v"><geometry><box><size>16 18 14</size></box></geometry><material><diffuse>0.34 0.39 0.34 1</diffuse></material></visual></link></model>
+    <model name="helipad" static="true"><pose>0 -25 0.06 0 0 0</pose><link name="pad"><visual name="disc"><geometry><cylinder><radius>5</radius><length>0.1</length></cylinder></geometry><material><diffuse>0.05 0.35 0.39 1</diffuse><emissive>0.02 0.16 0.18 1</emissive></material></visual><visual name="H"><pose>0 0 0.06 0 0 0</pose><geometry><box><size>2.6 0.45 0.04</size></box></geometry><material><emissive>0.8 0.95 0.95 1</emissive></material></visual></link></model>
+  </world>
+</sdf>
