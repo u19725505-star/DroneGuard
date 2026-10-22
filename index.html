@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#06131b">
+<title>DRONEGUARD // JARVIS FLIGHT CONSOLE</title>
+<style>
+:root{color-scheme:dark;--bg:#06131b;--panel:rgba(8,27,38,.88);--line:rgba(75,219,229,.27);--cyan:#5ce9f0;--muted:#7ba5b1;--green:#79f5c1;--amber:#ffd17b}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(ellipse at 50% 35%,#123441 0,#071923 48%,#03090e 100%);color:#dffaff;font:13px/1.5 ui-monospace,SFMono-Regular,Menlo,monospace;min-height:100vh;letter-spacing:.04em}
+body:before{content:"";position:fixed;inset:0;pointer-events:none;background:linear-gradient(transparent 50%,rgba(50,220,235,.035) 50%);background-size:100% 4px;z-index:5;opacity:.4}
+header{display:flex;justify-content:space-between;align-items:center;padding:18px 4vw;border-bottom:1px solid var(--line);gap:12px;flex-wrap:wrap}
+.brand{font-size:16px;letter-spacing:.22em;font-weight:800}.brand span{color:var(--cyan)}.sub{font-size:10px;color:var(--muted);margin-top:4px}
+.pill{border:1px solid var(--line);border-radius:99px;padding:7px 12px;color:var(--cyan);font-size:10px}
+main{max-width:1500px;margin:auto;padding:22px 3vw 40px}.eyebrow{color:var(--cyan);font-size:10px;letter-spacing:.24em}
+h1{font-size:clamp(23px,3vw,40px);letter-spacing:.12em;margin:6px 0 20px;font-weight:500}
+.grid{display:grid;grid-template-columns:1fr 1.7fr 1fr;gap:14px}.panel{border:1px solid var(--line);background:var(--panel);box-shadow:inset 0 0 30px #09202a70;padding:16px;min-width:0}
+.panel h2{font-size:11px;letter-spacing:.17em;color:var(--muted);font-weight:500;margin:0 0 18px}.metric{padding:12px 0;border-bottom:1px solid #183641}.metric:last-child{border:0}.metric label{display:block;color:var(--muted);font-size:10px}.value{font-size:24px;color:var(--cyan);margin-top:3px}.unit{font-size:10px;color:var(--muted)}
+.scene{position:relative;min-height:450px;overflow:hidden;background:linear-gradient(#081a29,#0c2935 63%,#07151c);display:flex;align-items:center;justify-content:center}
+.stars{position:absolute;inset:0;background-image:radial-gradient(#67e8f0 1px,transparent 1.5px);background-size:53px 47px;opacity:.2}
+.city{position:absolute;bottom:0;left:0;right:0;height:60%;display:flex;align-items:end;justify-content:space-evenly;perspective:400px;opacity:.7}
+.building{width:9%;background:repeating-linear-gradient(0deg,transparent 0 16px,#2a6674 17px 18px),repeating-linear-gradient(90deg,#153b49 0 12px,#225365 13px 14px);border:1px solid #347986;box-shadow:0 0 22px #0b6475;position:relative}
+.building:after{content:"";position:absolute;inset:8px;background:repeating-linear-gradient(90deg,transparent 0 7px,#63e8ee44 8px 9px)}
+.b1{height:42%}.b2{height:67%;width:12%}.b3{height:52%}.b4{height:83%;width:10%}.b5{height:36%}.b6{height:61%;width:13%}.b7{height:47%}
+.horizon{position:absolute;bottom:0;width:100%;height:34%;background:repeating-linear-gradient(90deg,transparent 0 58px,#46d9e122 59px 60px),linear-gradient(#123440,#07151c);clip-path:polygon(0 20%,100% 0,100% 100%,0 100%)}
+.reticle{position:relative;z-index:2;width:min(45%,230px);aspect-ratio:1;border:1px solid #65e9f0a0;border-radius:50%;display:grid;place-items:center;box-shadow:0 0 45px #1be4f222}
+.reticle:before,.reticle:after{content:"";position:absolute;background:var(--cyan);opacity:.8}.reticle:before{width:140%;height:1px}.reticle:after{height:140%;width:1px}
+.drone{width:75px;height:30px;position:relative;z-index:3;filter:drop-shadow(0 0 9px #5ce9f0)}
+.drone:before{content:"";position:absolute;left:28px;top:8px;width:20px;height:14px;background:#b6ffff;clip-path:polygon(50% 0,100% 100%,50% 76%,0 100%)}
+.drone i{position:absolute;width:28px;height:5px;border:1px solid var(--cyan);border-radius:50%;top:2px}.drone i:nth-child(1){left:0}.drone i:nth-child(2){right:0;top:20px}
+.cross{position:absolute;inset:20px;border:1px dashed #56dfe52b;border-radius:50%}
+.scene-label{position:absolute;z-index:4;color:var(--cyan);font-size:10px}.tl{top:14px;left:14px}.tr{top:14px;right:14px;text-align:right}.bl{bottom:14px;left:14px}.br{bottom:14px;right:14px;text-align:right}
+.scene-note{position:absolute;bottom:46px;left:10%;right:10%;z-index:4;text-align:center;color:#a3cbd2;font-size:10px;background:#05131bd9;padding:9px;border:1px solid var(--line)}
+.bar{height:5px;background:#183944;margin-top:8px}.bar span{display:block;height:100%;width:100%;background:linear-gradient(90deg,#22a7b8,var(--green))}
+.status{color:var(--amber)}.actions{display:flex;gap:8px;flex-wrap:wrap;margin:14px 0}.btn{border:1px solid var(--line);color:var(--cyan);background:#0b2631;padding:10px 13px;font:inherit;cursor:pointer}.btn:hover{background:#143c49}.small{font-size:10px;color:var(--muted)}.footer{margin-top:14px;display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap}
+@media(max-width:900px){.grid{grid-template-columns:1fr 1fr}.scene-panel{grid-column:1/-1;grid-row:1}.scene{min-height:390px}}
+@media(max-width:560px){.grid{grid-template-columns:1fr}.scene-panel{grid-column:auto}.scene{min-height:350px}.value{font-size:21px}}
+</style>
+</head>
+<body>
+<header><div><div class="brand">DRONE<span>GUARD</span> / JARVIS</div><div class="sub">SIMULATION INTELLIGENCE • FLIGHT SYSTEMS CONSOLE</div></div><div class="pill" id="mode">● DEMO MODE — NO LIVE LINK</div></header>
+<main><div class="eyebrow">MISSION CONTROL / 001</div><h1>URBAN FLIGHT TELEMETRY</h1>
+<div class="actions"><button class="btn" id="demo">RUN DEMO TELEMETRY</button><button class="btn" id="live">TRY LOCAL TELEMETRY API</button><span class="small" id="feedback">Illustrative interface. No flight-control commands are available.</span></div>
+<div class="grid">
+<section class="panel"><h2>FLIGHT DYNAMICS</h2>
+<div class="metric"><label>RELATIVE ALTITUDE</label><div class="value" id="alt">12.4 <span class="unit">m</span></div></div>
+<div class="metric"><label>GROUND SPEED</label><div class="value" id="speed">2.8 <span class="unit">m/s</span></div></div>
+<div class="metric"><label>HEADING</label><div class="value" id="heading">038 <span class="unit">°</span></div></div>
+<div class="metric"><label>GPS POSITION</label><div class="small" id="gps">47.39797 N / 8.54616 E</div></div>
+<div class="metric"><label>FLIGHT MODE</label><div class="value" style="font-size:18px" id="flightmode">OFFBOARD*</div><div class="small">*Demo placeholder, not actual vehicle state.</div></div>
+</section>
+<section class="panel scene-panel"><h2>VISUAL SENSOR FUSION / SCENE PREVIEW</h2>
+<div class="scene"><div class="stars"></div><div class="city"><div class="building b1"></div><div class="building b2"></div><div class="building b3"></div><div class="building b4"></div><div class="building b5"></div><div class="building b6"></div><div class="building b7"></div></div><div class="horizon"></div><div class="reticle"><div class="cross"></div><div class="drone"><i></i><i></i></div></div>
+<div class="scene-label tl">CAM 01 / FORWARD</div><div class="scene-label tr">SIM VIEW: NOT CONNECTED</div><div class="scene-label bl">OBSTACLE FIELD // ILLUSTRATIVE</div><div class="scene-label br">LINK: LOCAL ONLY</div>
+<div class="scene-note">HUD CONCEPT PREVIEW — this skyline is CSS artwork, not a Gazebo render or recorded flight.</div></div></section>
+<section class="panel"><h2>VEHICLE HEALTH</h2>
+<div class="metric"><label>BATTERY</label><div class="value" id="battery">100 <span class="unit">%</span></div><div class="bar"><span id="batterybar"></span></div></div>
+<div class="metric"><label>BATTERY VOLTAGE</label><div class="value" id="voltage">16.0 <span class="unit">V</span></div></div>
+<div class="metric"><label>GPS FIX</label><div class="value" id="fix">3D <span class="unit">FIX</span></div></div>
+<div class="metric"><label>ARM STATE</label><div class="value" style="font-size:18px" id="armed">DISARMED</div></div>
+<div class="metric"><label>TELEMETRY LINK</label><div class="value" style="font-size:17px" id="linkstate">SIMULATED</div><div class="small" id="updated">No live API data received</div></div>
+</section></div>
+<div class="footer"><span>DRONEGUARD / BUILD 0.1.0</span><span class="status">SAFETY: READ-ONLY DASHBOARD</span><span class="small">No credentials collected • No external AI API</span></div>
+</main>
+<script>
+const $=id=>document.getElementById(id);
+function paint(d,live=false){
+const n=(v,digits=1)=>Number.isFinite(Number(v))?Number(v).toFixed(digits):"—";
+$("alt").innerHTML=n(d.relative_altitude_m??d.altitude_m)+" <span class='unit'>m</span>";
+$("speed").innerHTML=n(d.groundspeed_m_s??d.groundspeed)+" <span class='unit'>m/s</span>";
+$("heading").innerHTML=n(d.heading_deg,0)+" <span class='unit'>°</span>";
+$("gps").textContent=(d.latitude==null?"—":n(d.latitude,5)+" N")+" / "+(d.longitude==null?"—":n(d.longitude,5)+" E");
+$("flightmode").textContent=d.mode??"UNKNOWN";
+$("battery").innerHTML=n(d.battery_remaining_pct??d.battery_percent,0)+" <span class='unit'>%</span>";
+$("batterybar").style.width=Math.max(0,Math.min(100,Number(d.battery_remaining_pct??d.battery_percent)||0))+"%";
+$("voltage").innerHTML=n(d.battery_voltage_v??d.voltage,1)+" <span class='unit'>V</span>";
+$("fix").innerHTML=(Number(d.gps_fix_type??d.gps_fix)>=3?"3D":"NO")+" <span class='unit'>FIX</span>";
+$("armed").textContent=d.armed===true?"ARMED":d.armed===false?"DISARMED":"UNKNOWN";
+$("linkstate").textContent=live?"CONNECTED":"SIMULATED";
+$("mode").textContent=live?"● LOCAL TELEMETRY LINK":"● DEMO MODE — NO LIVE LINK";
+$("updated").textContent="Updated "+new Date().toLocaleTimeString();
+}
+function demo(){paint({relative_altitude_m:12.4,groundspeed_m_s:2.8,heading_deg:38,latitude:47.39797,longitude:8.54616,mode:"DEMO ONLY",battery_remaining_pct:100,battery_voltage_v:16,gps_fix_type:3,armed:false},false);$("feedback").textContent="Demo values only — not actual vehicle telemetry."}
+$("demo").addEventListener("click",demo);
+$("live").addEventListener("click",async()=>{ $("feedback").textContent="Trying http://127.0.0.1:8765/api/telemetry …";try{const r=await fetch("http://127.0.0.1:8765/api/telemetry",{cache:"no-store"});if(!r.ok)throw Error("HTTP "+r.status);const d=await r.json();if(!d.connected)throw Error("API says no MAVLink connection");paint(d,true);$("feedback").textContent="Live local API data received. This does not enable vehicle control."}catch(e){$("feedback").textContent="No local API response. Start your local telemetry bridge; hosted Pages cannot reach Kaggle/device localhost.";$("mode").textContent="● LIVE LINK UNAVAILABLE";}});
+demo();
+</script>
+</body></html>
