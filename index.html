@@ -46,7 +46,7 @@ body.hud-low-motion *,body.hud-low-motion *:before{animation:none!important;tran
 <div class="mapfoot"><span class="muted">Google Maps provides geographic context only.</span><span class="muted" id="mapnote">No drone position is being tracked.</span></div>
 </section>
 <aside class="windows">
-<section class="panel"><div class="windowtitle"><h2>02 / FLIGHT DATA</h2><span id="telemetrytag">STANDBY</span></div><div class="metricgrid"><div class="metric"><label>REL. ALTITUDE</label><div class="val" id="alt">— <small>m</small></div></div><div class="metric"><label>GROUND SPEED</label><div class="val" id="speed">— <small>m/s</small></div></div><div class="metric"><label>HEADING</label><div class="val" id="heading">— <small>°</small></div></div><div class="metric"><label>BATTERY</label><div class="val" id="battery">— <small>%</small></div></div></div><svg class="trend" id="trend" viewBox="0 0 400 70" aria-label="Illustrative telemetry trend"><text x="8" y="22" fill="#8eafb9" font-size="10">Press start to run simulated telemetry</text></svg><div class="muted" id="flightnote">Values will be labelled as simulation output.</div><div class="trace-tools"><input id="tracefile" type="file" accept=".json,application/json" aria-label="Choose recorded PX4 SITL JSON trace"><button class="btn" id="loadtrace" type="button">LOAD RECORDED TRACE</button><button class="btn" id="stoptrace" type="button" disabled>STOP REPLAY</button></div><div class="trace-status" id="tracestatus">Evidence mode: demo values only. Import a timestamped PX4 SITL JSON file to analyze recorded samples locally.</div></section>
+<section class="panel"><div class="windowtitle"><h2>02 / FLIGHT DATA</h2><span id="telemetrytag">STANDBY</span></div><div class="metricgrid"><div class="metric"><label>REL. ALTITUDE</label><div class="val" id="alt">— <small>m</small></div></div><div class="metric"><label>GROUND SPEED</label><div class="val" id="speed">— <small>m/s</small></div></div><div class="metric"><label>HEADING</label><div class="val" id="heading">— <small>°</small></div></div><div class="metric"><label>BATTERY</label><div class="val" id="battery">— <small>%</small></div></div></div><svg class="trend" id="trend" viewBox="0 0 400 70" aria-label="Illustrative telemetry trend"><text x="8" y="22" fill="#8eafb9" font-size="10">Press start to run simulated telemetry</text></svg><div class="muted" id="flightnote">Values will be labelled as simulation output.</div><div class="trace-tools"><input id="tracefile" type="file" accept=".json,application/json" aria-label="Choose recorded PX4 SITL JSON trace"><button class="btn" id="loadtrace" type="button">LOAD RECORDED TRACE</button><button class="btn" id="stoptrace" type="button" disabled>STOP REPLAY</button><button class="btn" id="selftest" type="button">RUN KNOWN-ANOMALY TEST</button><button class="btn" id="exportreport" type="button" disabled>EXPORT EVIDENCE REPORT</button></div><div class="trace-status" id="tracestatus">Evidence mode: demo values only. Import a timestamped PX4 SITL JSON file to analyze recorded samples locally.</div></section>
 <section class="panel"><div class="windowtitle"><h2>03 / ISSUE DETECTION</h2><span id="issuecount">AWAITING SCAN</span></div><div class="issues" id="issues"><div class="issue"><i class="dot"></i><div><strong>Telemetry source not connected</strong><p>Expected in this hosted demo. No live MAVLink connection.</p></div></div><div class="issue"><i class="dot"></i><div><strong>Route data is illustrative</strong><p>Map is geographic context, not a tracked flight path.</p></div></div></div></section>
 <section class="panel"><div class="windowtitle"><h2>04 / DIAGNOSTICS & RESPONSE</h2><span>READ-ONLY</span></div><div class="log" id="log" aria-live="polite"><p class="warn">[SYSTEM] Mission console ready.</p><p>[GUARDRAIL] Vehicle-control commands disabled.</p><p>[NEXT] Start the walkthrough to inspect telemetry and diagnose demo conditions.</p></div><div style="margin-top:10px"><button class="btn" id="diagnose" type="button" onclick="window.runDroneDiagnostics()" disabled>RUN DIAGNOSTICS</button></div></section>
 </aside></div>
@@ -81,6 +81,7 @@ function showTraceSample(s,i,total){
  $("closingdetail").textContent="Read-only replay. No vehicle commands are sent.";
  $("progress").textContent="TRACE "+(i+1)+" / "+total;
 }
+let lastTraceFindings=[];
 function analyzeTrace(){
  const valid=traceSamples.map(normaliseSample), findings=[];
  const missing=valid.filter(s=>s.alt===null||s.speed===null).length;
@@ -92,12 +93,47 @@ function analyzeTrace(){
  const gaps=[];for(let i=1;i<valid.length;i++){const a=Date.parse(valid[i-1].timestamp),b=Date.parse(valid[i].timestamp);if(Number.isFinite(a)&&Number.isFinite(b)&&(b-a)>3000)gaps.push((b-a)/1000);}
  if(gaps.length)findings.push(["Timestamp gap",gaps.length+" interval(s) exceed 3 seconds; this may indicate sampling gaps, not vehicle failure.",false]);
  if(!findings.length)findings.push(["No configured threshold crossed","No issue was detected by the basic screening rules. This is not a safety certification.",true]);
- $("issues").innerHTML="";findings.forEach(f=>setIssue(f[0],f[1],f[2]));$("issuecount").textContent="RECORDED TRACE • "+findings.length+" FINDING"+(findings.length===1?"":"S");
+ $("issues").innerHTML="";lastTraceFindings=findings.map(f=>({title:f[0],detail:f[1],passed:!!f[2]}));$("exportreport").disabled=false;findings.forEach(f=>setIssue(f[0],f[1],f[2]));$("issuecount").textContent="RECORDED TRACE • "+findings.length+" FINDING"+(findings.length===1?"":"S");
  $("log").innerHTML="";log("[EVIDENCE] Recorded JSON trace parsed locally.","ok");log("[VALIDATION] Samples: "+valid.length+" • timestamped: "+valid.filter(s=>s.timestamp!==null).length+" • valid altitude: "+alts.length+" • valid groundspeed: "+speeds.length);log("[PROVENANCE] "+String(traceMeta.source||traceMeta.provenance||"Not specified in file; verify against your PX4 SITL capture process"),"warn");findings.forEach(f=>log("[FINDING] "+f[0]+": "+f[1],f[2]?"ok":"warn"));log("[GUARDRAIL] Recorded data only. No MAVLink connection or vehicle-control command.","ok");
  $("closing").textContent="JARVIS: Trace analyzed, Sir. Here is what the file supports.";
  $("closingdetail").textContent="Screening rules only; verify any concern against PX4/Gazebo logs before drawing conclusions.";
 }
 let traceMeta={};
+function runKnownAnomalyTest(){
+ if(traceTimer)clearInterval(traceTimer);traceTimer=null;if(timer)clearInterval(timer);timer=null;
+ const t=Date.parse("2026-01-01T00:00:00Z");
+ traceSamples=[
+  {timestamp:new Date(t).toISOString(),altitude:2,groundspeed:1,battery:95,heading:0},
+  {timestamp:new Date(t+1000).toISOString(),altitude:2,groundspeed:2,battery:94,heading:5},
+  {timestamp:new Date(t+2000).toISOString(),altitude:-1.2,groundspeed:12,battery:15,heading:10},
+  {timestamp:new Date(t+7000).toISOString(),altitude:1,groundspeed:1,battery:14,heading:12}
+ ];
+ traceMeta={source:"DroneGuard built-in synthetic known-anomaly test",provenance:"Generated in browser; not a PX4 flight"};
+ traceIndex=0;traceLoaded=true;step=0;series.length=0;
+ $("gpsmarker").classList.add("trace-mode");$("routepath").parentElement.classList.add("trace-mode");
+ $("start").disabled=false;$("start").textContent="↻ RUN DEMO WALKTHROUGH";$("systemmode").textContent="● SYNTHETIC TEST MODE";$("stoptrace").disabled=true;$("diagnose").disabled=false;
+ $("tracestatus").textContent="SYNTHETIC TEST • 4 known samples • injected: groundspeed jump, low battery, negative altitude, 5-second timestamp gap. Not real flight data.";
+ $("flightnote").textContent="Synthetic test values — generated locally to validate configured screening rules.";
+ log("[TEST] Built-in synthetic trace loaded. This is a test fixture, not PX4 evidence.","warn");
+ showTraceSample(normaliseSample(traceSamples[0]),0,traceSamples.length);analyzeTrace();
+ const names=lastTraceFindings.map(f=>f.title);
+ const expected=["Groundspeed discontinuity","Low battery reading","Altitude below reference","Timestamp gap"];
+ const missing=expected.filter(n=>!names.includes(n));
+ const status=missing.length?"TEST NEEDS ATTENTION • missed: "+missing.join(", "):"KNOWN-ANOMALY TEST PASSED • all 4 injected conditions surfaced";
+ $("closing").textContent="JARVIS: "+status+", Sir.";
+ $("closingdetail").textContent="Deterministic screening-rule check only; passing does not validate real-world flight safety.";
+ log("[TEST RESULT] "+status,missing.length?"warn":"ok");
+}
+function exportEvidenceReport(){
+ if(!traceLoaded||!lastTraceFindings.length){$("tracestatus").textContent="Analyze a trace or run the known-anomaly test before exporting.";return;}
+ const valid=traceSamples.map(normaliseSample);
+ const report={reportType:"DroneGuard read-only telemetry screening report",generatedAt:new Date().toISOString(),dataMode:String(traceMeta.source||traceMeta.provenance||"User-provided trace; provenance not verified"),sampleCount:valid.length,timestampedSamples:valid.filter(s=>s.timestamp!==null).length,coverage:{altitude:valid.filter(s=>s.alt!==null).length,groundspeed:valid.filter(s=>s.speed!==null).length,battery:valid.filter(s=>s.battery!==null).length},findings:lastTraceFindings,limitations:["Screening rules only; not a safety certification.","File metadata is not proof of simulator provenance.","No vehicle commands or live MAVLink connection are used."],thresholds:{groundspeedAdjacentChangeMetersPerSecond:8,batteryPercentBelow:20,altitudeMetersBelow:-0.5,timestampGapSecondsAbove:3}};
+ const blob=new Blob([JSON.stringify(report,null,2)],{type:"application/json"}),url=URL.createObjectURL(blob),a=document.createElement("a");
+ a.href=url;a.download="droneguard-evidence-report.json";document.body.appendChild(a);a.click();a.remove();URL.revokeObjectURL(url);
+ log("[EXPORT] Evidence screening report downloaded locally as JSON.","ok");
+}
+$("selftest").addEventListener("click",runKnownAnomalyTest);
+$("exportreport").addEventListener("click",exportEvidenceReport);
 async function loadTrace(){
  const file=$("tracefile").files&&$("tracefile").files[0];if(!file){$("tracestatus").textContent="Choose a JSON trace file first.";return;}
  try{
