@@ -2,7 +2,40 @@
 <html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#06131b"><title>DroneGuard // JARVIS Mission Console</title>
 <style>
 :root{color-scheme:dark;--bg:#050e15;--panel:#0a1c27;--line:#1b4856;--cyan:#64f0f1;--green:#78f5b8;--amber:#ffca72;--red:#ff777f;--muted:#8eafb9}*{box-sizing:border-box}body{margin:0;background:radial-gradient(ellipse at 50% 0,#123440,#050e15 65%);color:#e5fbff;font:13px/1.5 ui-monospace,SFMono-Regular,Menlo,monospace;letter-spacing:.025em}button{font:inherit;cursor:pointer}.top{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;padding:16px 4vw;border-bottom:1px solid var(--line);background:#06131be8}.brand{font-size:17px;font-weight:800;letter-spacing:.2em}.brand b{color:var(--cyan)}.sub,.muted{color:var(--muted);font-size:10px}.pill{border:1px solid #326675;color:var(--cyan);border-radius:99px;padding:6px 11px;font-size:10px}main{max-width:1500px;margin:auto;padding:22px 3vw 38px}.welcome{display:flex;align-items:center;justify-content:space-between;gap:20px;flex-wrap:wrap;margin-bottom:20px}.eyebrow{color:var(--cyan);font-size:10px;letter-spacing:.24em}.welcome h1{font-size:clamp(26px,4vw,45px);font-weight:500;letter-spacing:.08em;margin:5px 0}.welcome p{color:#a7c8d1;margin:5px 0}.btn{background:#0d2c38;color:var(--cyan);border:1px solid #327080;padding:11px 15px;letter-spacing:.04em}.btn.primary{background:var(--cyan);color:#04151b;font-weight:800;border-color:var(--cyan)}.btn:hover{filter:brightness(1.18)}.layout{display:grid;grid-template-columns:minmax(0,1.6fr) minmax(300px,1fr);gap:14px}.panel{background:linear-gradient(145deg,#0b202b,#071720);border:1px solid var(--line);padding:15px;min-width:0;box-shadow:inset 0 0 24px #0d35411a}.panelhead{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:12px}.panel h2{font-size:11px;letter-spacing:.16em;color:#a4c5ce;font-weight:500;margin:0}.tag{font-size:9px;color:var(--green);border:1px solid #2e6d5b;padding:4px 7px}.mapwrap{height:370px;position:relative;overflow:hidden;background:#0c2530}.mapwrap iframe{width:100%;height:100%;border:0;filter:saturate(.75) contrast(1.05)}.maphud{position:absolute;left:10px;top:10px;padding:8px 10px;background:#04131be8;border:1px solid #2b6874;pointer-events:none}.maphud strong{display:block;color:var(--cyan);font-size:10px}.maphud span{color:#aac7cf;font-size:9px}.mapfoot{display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap;padding-top:10px}.windows{display:grid;grid-template-columns:1fr;gap:14px}.metricgrid{display:grid;grid-template-columns:1fr 1fr;gap:9px}.metric{border:1px solid #1b3b46;background:#07151d;padding:11px}.metric label{display:block;color:var(--muted);font-size:9px}.val{font-size:24px;color:var(--cyan);margin-top:4px}.val small{font-size:10px;color:var(--muted)}.trend{width:100%;height:70px;display:block;margin-top:8px}.windowtitle{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}.windowtitle span{font-size:9px;color:var(--muted)}.issues{display:grid;gap:8px}.issue{display:flex;gap:9px;padding:9px;border:1px solid #23414b;background:#07151d}.dot{width:8px;height:8px;border-radius:50%;background:var(--amber);margin-top:5px;flex:none}.dot.ok{background:var(--green)}.issue strong{display:block;font-size:11px}.issue p{margin:3px 0 0;color:var(--muted);font-size:10px}.solution{color:var(--green)!important}.log{background:#041017;border:1px solid #1a3b46;padding:10px;height:130px;overflow:auto;color:#8db6c1;font-size:10px}.log p{margin:0 0 6px}.log .ok{color:var(--green)}.log .warn{color:var(--amber)}.missionbar{margin-top:14px;padding:14px;border:1px solid #246174;background:linear-gradient(90deg,#0a2935,#071720);display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}.missionbar strong{font-size:13px;color:var(--cyan)}.missionbar p{margin:3px 0 0;color:var(--muted);font-size:10px}.footer{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;margin-top:14px;color:var(--muted);font-size:9px}.hide{display:none!important}@media(max-width:900px){.layout{grid-template-columns:1fr}.windows{grid-template-columns:repeat(3,minmax(0,1fr))}.mapwrap{height:330px}}@media(max-width:650px){.windows{grid-template-columns:1fr}.mapwrap{height:300px}.welcome .btn{width:100%}.val{font-size:21px}}
-.voice-controls{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-top:9px}.voice-status{font-size:9px;color:var(--muted)}.maproute{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}.maproute path{fill:none;stroke:#64f0f1;stroke-width:3;stroke-dasharray:8 7;filter:drop-shadow(0 0 4px #64f0f1)}.gps-marker{position:absolute;left:50%;top:53%;width:20px;height:20px;border-radius:50%;border:3px solid white;background:#ff555d;box-shadow:0 0 0 7px #ff555d38,0 0 20px #ff555d;transform:translate(-50%,-50%);z-index:3;transition:left 1.2s linear,top 1.2s linear;pointer-events:none}.gps-marker:after{content:"";position:absolute;left:4px;top:4px;width:6px;height:6px;background:white;border-radius:50%}.gps-readout{position:absolute;right:10px;bottom:10px;background:#04131bea;border:1px solid #2b6874;padding:8px 10px;z-index:4;pointer-events:none}.gps-readout strong{display:block;color:var(--green);font-size:10px}.gps-readout span{font-size:9px;color:#b7d3dc}.maphud{z-index:4}.voice-btn{font-size:10px;padding:8px 10px}.trace-tools{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-top:10px}.trace-tools input{max-width:100%;font-size:10px;color:var(--muted)}.trace-status{font-size:9px;color:var(--muted);margin-top:6px}.evidence{color:var(--green)!important}.gps-marker.trace-mode{display:none}.maproute.trace-mode{display:none}</style></head>
+.voice-controls{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-top:9px}.voice-status{font-size:9px;color:var(--muted)}.maproute{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}.maproute path{fill:none;stroke:#64f0f1;stroke-width:3;stroke-dasharray:8 7;filter:drop-shadow(0 0 4px #64f0f1)}.gps-marker{position:absolute;left:50%;top:53%;width:20px;height:20px;border-radius:50%;border:3px solid white;background:#ff555d;box-shadow:0 0 0 7px #ff555d38,0 0 20px #ff555d;transform:translate(-50%,-50%);z-index:3;transition:left 1.2s linear,top 1.2s linear;pointer-events:none}.gps-marker:after{content:"";position:absolute;left:4px;top:4px;width:6px;height:6px;background:white;border-radius:50%}.gps-readout{position:absolute;right:10px;bottom:10px;background:#04131bea;border:1px solid #2b6874;padding:8px 10px;z-index:4;pointer-events:none}.gps-readout strong{display:block;color:var(--green);font-size:10px}.gps-readout span{font-size:9px;color:#b7d3dc}.maphud{z-index:4}.voice-btn{font-size:10px;padding:8px 10px}.trace-tools{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-top:10px}.trace-tools input{max-width:100%;font-size:10px;color:var(--muted)}.trace-status{font-size:9px;color:var(--muted);margin-top:6px}.evidence{color:var(--green)!important}.gps-marker.trace-mode{display:none}.maproute.trace-mode{display:none}
+/* JARVIS glass cockpit skin */
+:root{--glass-alpha:.48;--hud-glow:.72;--scan-speed:7s}
+body{background:radial-gradient(ellipse at 50% -10%,#16465b 0,#071723 42%,#030910 100%);background-attachment:fixed}
+body:before{content:"";position:fixed;inset:0;pointer-events:none;z-index:20;opacity:.12;background:repeating-linear-gradient(0deg,transparent 0 3px,#65eaff 4px,transparent 5px);mix-blend-mode:screen;animation:scanDrift var(--scan-speed) linear infinite}
+@keyframes scanDrift{from{transform:translateY(-14px)}to{transform:translateY(14px)}}
+.panel,.metric,.issue,.log,.missionbar{background:linear-gradient(135deg,rgba(19,83,112,var(--glass-alpha)),rgba(4,19,32,.72));backdrop-filter:blur(16px) saturate(145%);-webkit-backdrop-filter:blur(16px) saturate(145%);border-color:rgba(75,210,246,.36);box-shadow:inset 0 1px 0 rgba(173,245,255,.14),inset 0 0 24px rgba(40,177,232,.08),0 0 18px rgba(0,167,255,.06)}
+.panel{position:relative;overflow:hidden}
+.panel:after{content:"";position:absolute;inset:0;pointer-events:none;border-radius:inherit;background:linear-gradient(115deg,rgba(148,236,255,.075),transparent 32%,transparent 70%,rgba(52,185,255,.055));}
+.panelhead,.panel>*{position:relative;z-index:1}
+.panel h2,.windowtitle{color:#c7f5ff;text-shadow:0 0 calc(16px * var(--hud-glow)) #21b8ff55}
+.metric{border-radius:5px;box-shadow:inset 0 0 18px #39c7ff12,0 0 14px #1389d322}
+.val{ text-shadow:0 0 calc(15px * var(--hud-glow)) #22cfff88}
+.tag,.pill{box-shadow:0 0 calc(12px * var(--hud-glow)) #1acbff20}
+.btn{border-radius:3px;transition:transform .16s ease,box-shadow .16s ease,background .16s ease}
+.btn:hover{transform:translateY(-1px);box-shadow:0 0 16px #21cfff40}
+.hud-dock{position:sticky;bottom:10px;z-index:30;margin:18px auto 0;padding:13px 15px;border:1px solid rgba(80,220,255,.48);border-radius:8px;background:linear-gradient(120deg,rgba(5,27,43,.94),rgba(8,52,76,.89));backdrop-filter:blur(20px);box-shadow:0 12px 40px #0008,inset 0 1px #b6f5ff24}
+.dock-head{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:10px}
+.dock-title{font-size:10px;letter-spacing:.2em;color:#b9f3ff}.dock-state{font-size:9px;color:var(--green)}
+.dock-controls{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px}
+.knob-control{min-width:0;padding:8px 10px;border:1px solid #27617a;background:#041724a8;border-radius:4px}
+.knob-top{display:flex;justify-content:space-between;gap:5px;color:#9ecbd8;font-size:9px;margin-bottom:8px}
+.knob-top output{color:var(--cyan);font-variant-numeric:tabular-nums}
+.knob-control input[type=range]{width:100%;accent-color:#4bdcff;cursor:ew-resize}
+.dock-actions{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-top:10px}
+.dock-btn{background:#082d42;color:#9cecff;border:1px solid #287b98;padding:7px 10px;font-size:9px;letter-spacing:.08em}
+.dock-btn[aria-pressed=true]{background:#0b536b;color:#fff;box-shadow:0 0 12px #22bfff33}
+.hud-corner{color:#4dcdf6;font-size:9px;letter-spacing:.12em}
+body.hud-no-scan:before{display:none}
+body.hud-low-motion *,body.hud-low-motion *:before{animation:none!important;transition:none!important}
+@media(max-width:700px){.dock-controls{grid-template-columns:repeat(2,minmax(0,1fr))}.hud-dock{position:relative;bottom:auto}}
+@media(prefers-reduced-motion:reduce){body:before{animation:none}}
+
+</style></head>
 <body>
 <header class="top"><div><div class="brand">DRONE<b>GUARD</b> / JARVIS</div><div class="sub">SIMULATION INTELLIGENCE • AUTONOMOUS SYSTEMS TROUBLESHOOTING</div></div><div class="pill" id="systemmode">● SAFE SIMULATION MODE</div></header>
 <main>
@@ -86,4 +119,39 @@ function tick(){if(traceLoaded)return;step++;const alt=2+Math.sin(step*.48)*1.1+
 $("loadtrace").addEventListener("click",loadTrace);$("stoptrace").addEventListener("click",stopTrace);$("voiceToggle").addEventListener("click",()=>{if(!("speechSynthesis" in window)){$("voicestatus").textContent="This browser does not support speech synthesis.";return;}voiceEnabled=!voiceEnabled;if(voiceEnabled){window.speechSynthesis.getVoices();$("voiceToggle").textContent="🔇 TURN JARVIS VOICE OFF";$("voicestatus").textContent="Voice enabled. Audio begins after a mission action.";speak("Voice system online. Yes, Sir. I am ready.");}else{window.speechSynthesis.cancel();$("voiceToggle").textContent="🔊 ENABLE JARVIS VOICE";$("voicestatus").textContent="Voice is off.";}});if("speechSynthesis" in window)window.speechSynthesis.onvoiceschanged=()=>window.speechSynthesis.getVoices();$("start").addEventListener("click",start);window.startMissionWalkthrough=start;$("diagnose").addEventListener("click",()=>{if(traceLoaded){analyzeTrace();return;} $("log").innerHTML="";log("[DIAGNOSTIC] No recorded trace loaded; dashboard has no live telemetry source.");log("[REMEDIATION] Export actual PX4 SITL telemetry to JSON, then load it above.","ok");log("[VALIDATION] Check timestamps, sample count, units, and simulator provenance before presenting results.","ok");$("closing").textContent="JARVIS: I am ready to solve the problem now, Sir.";$("closingdetail").textContent="The safe fix is an evidence-backed replay pipeline. No live endpoint or flight-control access is required.";});
 window.runDroneDiagnostics=()=> $("diagnose").click();
 document.addEventListener("DOMContentLoaded",()=>{const b=$("start");if(b){b.disabled=false;b.style.pointerEvents="auto";}});
-</script></body></html>
+</script>
+<section class="hud-dock" aria-label="JARVIS interface controls">
+ <div class="dock-head"><div><div class="dock-title">J.A.R.V.I.S. // DISPLAY CALIBRATION</div><div class="sub">Interactive UI controls • presentation only • no effect on vehicle or recorded data</div></div><span class="dock-state" id="dockState">HUD LINK STABLE</span></div>
+ <div class="dock-controls">
+  <label class="knob-control"><span class="knob-top"><span>GLASS TRANSPARENCY</span><output id="glassOut">48%</output></span><input id="glassKnob" type="range" min="20" max="78" value="48" aria-label="Glass transparency"></label>
+  <label class="knob-control"><span class="knob-top"><span>HUD GLOW</span><output id="glowOut">72%</output></span><input id="glowKnob" type="range" min="0" max="100" value="72" aria-label="HUD glow intensity"></label>
+  <label class="knob-control"><span class="knob-top"><span>SCAN RATE</span><output id="scanOut">7 s</output></span><input id="scanKnob" type="range" min="3" max="16" value="7" aria-label="Scan animation rate"></label>
+  <label class="knob-control"><span class="knob-top"><span>INTERFACE SCALE</span><output id="scaleOut">100%</output></span><input id="scaleKnob" type="range" min="90" max="110" value="100" aria-label="Interface scale"></label>
+ </div>
+ <div class="dock-actions"><button class="dock-btn" id="scanToggle" aria-pressed="true">SCANLINES ON</button><button class="dock-btn" id="motionToggle" aria-pressed="false">MOTION ON</button><button class="dock-btn" id="resetHud">RESET DISPLAY</button><span class="hud-corner">READ-ONLY // SIMULATION CONSOLE</span></div>
+</section>
+<script>
+(()=>{
+ const root=document.documentElement,body=document.body;
+ const glass=document.getElementById('glassKnob'),glow=document.getElementById('glowKnob'),scan=document.getElementById('scanKnob'),scale=document.getElementById('scaleKnob');
+ if(!glass||!glow||!scan||!scale)return;
+ function apply(){
+  root.style.setProperty('--glass-alpha',(Number(glass.value)/100).toFixed(2));
+  root.style.setProperty('--hud-glow',(Number(glow.value)/100).toFixed(2));
+  root.style.setProperty('--scan-speed',scan.value+'s');
+  root.style.fontSize=scale.value+'%';
+  document.getElementById('glassOut').textContent=glass.value+'%';
+  document.getElementById('glowOut').textContent=glow.value+'%';
+  document.getElementById('scanOut').textContent=scan.value+' s';
+  document.getElementById('scaleOut').textContent=scale.value+'%';
+  document.getElementById('dockState').textContent='HUD CALIBRATED • '+new Date().toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'});
+ }
+ [glass,glow,scan,scale].forEach(el=>el.addEventListener('input',apply));
+ const scanToggle=document.getElementById('scanToggle'),motionToggle=document.getElementById('motionToggle');
+ scanToggle.addEventListener('click',()=>{const on=scanToggle.getAttribute('aria-pressed')!=='true';scanToggle.setAttribute('aria-pressed',String(on));scanToggle.textContent='SCANLINES '+(on?'ON':'OFF');body.classList.toggle('hud-no-scan',!on);});
+ motionToggle.addEventListener('click',()=>{const on=motionToggle.getAttribute('aria-pressed')!=='true';motionToggle.setAttribute('aria-pressed',String(on));motionToggle.textContent='MOTION '+(on?'ON':'REDUCED');body.classList.toggle('hud-low-motion',!on);});
+ document.getElementById('resetHud').addEventListener('click',()=>{glass.value=48;glow.value=72;scan.value=7;scale.value=100;apply();scanToggle.setAttribute('aria-pressed','true');scanToggle.textContent='SCANLINES ON';body.classList.remove('hud-no-scan','hud-low-motion');motionToggle.setAttribute('aria-pressed','false');motionToggle.textContent='MOTION ON';document.getElementById('dockState').textContent='DISPLAY DEFAULTS RESTORED';});
+ apply();
+})();
+</script>
+</body></html>
