@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1400" height="480" viewBox="0 0 1400 480" role="img" aria-labelledby="title desc">
+<title id="title">DroneGuard Mission Intelligence</title><desc id="desc">Futuristic cyan and teal drone mission console with city grid, telemetry rings, and a drone silhouette. Illustrative concept art.</desc>
+<defs>
+ <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#04121c"/><stop offset=".55" stop-color="#092a37"/><stop offset="1" stop-color="#031018"/></linearGradient>
+ <linearGradient id="line" x1="0" y1="0" x2="1" y2="0"><stop stop-color="#41f2e8" stop-opacity=".1"/><stop offset=".5" stop-color="#41f2e8" stop-opacity=".9"/><stop offset="1" stop-color="#7cffbd" stop-opacity=".1"/></linearGradient>
+ <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse"><path d="M40 0H0V40" fill="none" stroke="#4ce8ed" stroke-opacity=".12" stroke-width="1"/></pattern>
+ <filter id="glow"><feGaussianBlur stdDeviation="4" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+</defs>
+<rect width="1400" height="480" rx="22" fill="url(#bg)"/><rect width="1400" height="480" rx="22" fill="url(#grid)"/>
+<path d="M0 355L100 355 100 298 170 298 170 333 230 333 230 260 300 260 300 355 360 355 360 220 420 220 420 355 485 355 485 286 550 286 550 355 625 355 625 250 690 250 690 355 770 355 770 300 830 300 830 355 910 355 910 235 970 235 970 355 1040 355 1040 280 1100 280 1100 355 1180 355 1180 245 1240 245 1240 355 1320 355 1320 310 1400 310" fill="#0c3440" stroke="#1a7781" stroke-opacity=".55"/>
+<path d="M0 390H1400" stroke="#52e7e8" stroke-opacity=".45"/>
+<g fill="none" stroke="#43e8e8" stroke-opacity=".65"><circle cx="1040" cy="178" r="94"/><circle cx="1040" cy="178" r="68" stroke-dasharray="4 9"/><circle cx="1040" cy="178" r="38"/><path d="M915 178H1165M1040 53V303M950 90L1130 266M1130 90L950 266" stroke-opacity=".3"/></g>
+<g transform="translate(1040 178)" fill="none" stroke="#7cffbd" stroke-width="3" filter="url(#glow)"><path d="M-72 0H-24L0 -17 24 0H72M-24 0L-45 26M24 0L45 26M0 -17V-40"/><circle cx="-78" cy="0" r="13"/><circle cx="78" cy="0" r="13"/><circle cx="-49" cy="31" r="10"/><circle cx="49" cy="31" r="10"/><circle cx="0" cy="-45" r="8"/><circle cx="0" cy="-2" r="5" fill="#7cffbd"/></g>
+<g font-family="Arial,Helvetica,sans-serif"><text x="76" y="84" fill="#7cffbd" font-size="15" letter-spacing="6">MISSION INTELLIGENCE / PROTOTYPE</text><text x="72" y="168" fill="#e7ffff" font-size="78" font-weight="800" letter-spacing="2">DRONEGUARD</text><text x="78" y="218" fill="#78f7f0" font-size="25" letter-spacing="2">OBSERVE  /  INSPECT  /  DOCUMENT</text><path d="M78 250H690" stroke="url(#line)" stroke-width="2"/><text x="80" y="294" fill="#c3e9ed" font-size="19">A JARVIS-inspired mission console for drone operations.</text><text x="80" y="327" fill="#89b7c2" font-size="16">SIMULATION-FIRST • SYNTHETIC SCENARIOS • READ-ONLY DEVELOPMENT PATH</text></g>
+<g font-family="monospace" font-size="12" fill="#7cffbd"><text x="1210" y="68">SYS / DEMO</text><text x="1210" y="87">NO LIVE VEHICLE</text><text x="1210" y="106">TELEMETRY: SYNTHETIC</text></g>
+<g stroke="#7cffbd" stroke-width="2" fill="none"><path d="M1210 120h120v58h-120z" stroke-opacity=".6"/><path d="M1222 163v-17h8v17m8 0v-28h8v28m8 0v-37h8v37m8 0v-21h8v21m8 0v-31h8v31"/></g>
+<text x="76" y="438" fill="#6da7b4" font-family="monospace" font-size="13" letter-spacing="3">HTCJ × PROOF AVIATION FUTURES CHALLENGE</text>
+</svg>
